@@ -17,14 +17,12 @@ class Balloon {
     required this.size,
     required this.speed,
     required this.color,
-  }) {
-    reset();
-  }
+  });
 
-  void reset() {
+  void reset(Size screenSize) {
     final random = Random();
-    x = random.nextDouble() * 400; // Screen width assumption
-    y = random.nextDouble() * 800 + 800; // Start below the screen
+    x = random.nextDouble() * screenSize.width;
+    y = random.nextDouble() * screenSize.height + screenSize.height; // Start below the screen
 
     // Generate a random pattern for the string
     stringSegments = random.nextInt(2) + 2; // 2 or 3 squiggles
@@ -34,13 +32,13 @@ class Balloon {
     );
   }
 
-  void move() {
+  void move(Size screenSize) {
     y -= speed;
     // The balloon body's lowest point is y + size.
     // The string adds another 3 * size to the length.
     // So, we reset when the whole object is off-screen.
     if (y < -(size * 5)) {
-      reset();
+      reset(screenSize);
     }
   }
 }

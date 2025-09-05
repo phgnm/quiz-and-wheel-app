@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:myapp/screen/quiz/models/balloon_model.dart';
 
@@ -11,7 +10,7 @@ class BalloonPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final balloonPaint = Paint();
     final stringPaint = Paint()
-      ..color = Colors.white.withOpacity(0.4) // Reduced opacity for a softer look
+      ..color = Colors.white.withAlpha((0.4 * 255).round()) // Reduced opacity for a softer look
       ..strokeWidth = 1.5
       ..style = PaintingStyle.stroke;
 
