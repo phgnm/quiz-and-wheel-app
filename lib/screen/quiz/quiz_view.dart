@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:myapp/screen/quiz/models/balloon_model.dart';
 import 'package:myapp/screen/quiz/widgets/balloon_painter.dart';
+import 'package:myapp/screen/quiz/widgets/party_hat_painter.dart';
 import 'package:myapp/shared/constants/app_colors.dart';
 
 class QuizScreen extends StatefulWidget {
@@ -12,8 +13,7 @@ class QuizScreen extends StatefulWidget {
   State<QuizScreen> createState() => _QuizScreenState();
 }
 
-class _QuizScreenState extends State<QuizScreen>
-    with TickerProviderStateMixin {
+class _QuizScreenState extends State<QuizScreen> with TickerProviderStateMixin {
   late AnimationController _gradientController;
   late Animation<Color?> _colorAnimation1;
   late Animation<Color?> _colorAnimation2;
@@ -53,7 +53,9 @@ class _QuizScreenState extends State<QuizScreen>
         id: index,
         size: random.nextDouble() * 20 + 10,
         speed: random.nextDouble() * 2 + 1,
-        color: Colors.blue.withAlpha(((random.nextDouble() * 0.5 + 0.2) * 255).round()),
+        color: Colors.blue.withAlpha(
+          ((random.nextDouble() * 0.5 + 0.2) * 255).round(),
+        ),
       );
     });
 
@@ -69,7 +71,7 @@ class _QuizScreenState extends State<QuizScreen>
     final newScreenSize = MediaQuery.of(context).size;
     if (_screenSize != newScreenSize) {
       _screenSize = newScreenSize;
-      
+
       // Reset balloons position
       for (var balloon in _balloons) {
         balloon.reset(_screenSize!);
@@ -119,10 +121,7 @@ class _QuizScreenState extends State<QuizScreen>
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
-                    colors: [
-                      _colorAnimation1.value!,
-                      _colorAnimation2.value!,
-                    ],
+                    colors: [_colorAnimation1.value!, _colorAnimation2.value!],
                   ),
                 ),
               );
@@ -136,69 +135,106 @@ class _QuizScreenState extends State<QuizScreen>
             child: Column(
               children: [
                 const SizedBox(height: 20),
-                Image.asset(
-                  'lib/assets/images/logo.png',
-                  height: 100,
-                ),
+                Image.asset('lib/assets/images/logo.png', height: 100),
                 const SizedBox(height: 20),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Container(
-                      padding: const EdgeInsets.all(20.0),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withAlpha((0.1 * 255).round()),
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          color: Colors.white.withAlpha((0.5 * 255).round()),
-                        ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(12.0),
-                            decoration: BoxDecoration(
-                                color: Colors.white.withAlpha((0.2 * 255).round()),
-                                borderRadius: BorderRadius.circular(15),
-                                border: Border.all(
-                                  color: Colors.white.withAlpha((0.7 * 255).round()),
-                                  width: 2,
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        final screenSize = MediaQuery.of(context).size;
+                        final double hatHeight = screenSize.height * 0.08;
+                        final double hatWidth = hatHeight / 1.4;
+                        return Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(20.0),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withAlpha(
+                                  (0.1 * 255).round(),
                                 ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withAlpha((0.1 * 255).round()),
-                                    spreadRadius: 2,
-                                    blurRadius: 5,
-                                    offset: const Offset(0, 3),
-                                  )
-                                ]),
-                            child: Text(
-                              'What is the capital of France?',
-                              style: GoogleFonts.oswald(
-                                fontSize: 28,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                  color: Colors.white.withAlpha(
+                                    (0.5 * 255).round(),
+                                  ),
+                                ),
                               ),
-                              textAlign: TextAlign.center,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(12.0),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white.withAlpha(
+                                        (0.2 * 255).round(),
+                                      ),
+                                      borderRadius: BorderRadius.circular(15),
+                                      border: Border.all(
+                                        color: Colors.white.withAlpha(
+                                          (0.7 * 255).round(),
+                                        ),
+                                        width: 2,
+                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withAlpha(
+                                            (0.1 * 255).round(),
+                                          ),
+                                          spreadRadius: 2,
+                                          blurRadius: 5,
+                                          offset: const Offset(0, 3),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Text(
+                                      'What is the capital of France?',
+                                      style: GoogleFonts.oswald(
+                                        fontSize: 52,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 20),
+                                  Expanded(
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        GridView.count(
+                                          shrinkWrap: true,
+                                          crossAxisCount: 2,
+                                          crossAxisSpacing: 15,
+                                          mainAxisSpacing: 15,
+                                          children: [
+                                            _buildAnswerButton('Paris'),
+                                            _buildAnswerButton('London'),
+                                            _buildAnswerButton('Berlin'),
+                                            _buildAnswerButton('Madrid'),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 20),
-                          Expanded(
-                            child: GridView.count(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 15,
-                              mainAxisSpacing: 15,
-                              children: [
-                                _buildAnswerButton('Paris'),
-                                _buildAnswerButton('London'),
-                                _buildAnswerButton('Berlin'),
-                                _buildAnswerButton('Madrid'),
-                              ],
+                            Positioned(
+                              top: -hatHeight + 10,
+                              left: -hatWidth * 0.2,
+                              child: Transform.rotate(
+                                angle: -0.5,
+                                child: CustomPaint(
+                                  painter: PartyHatPainter(),
+                                  size: Size(hatWidth, hatHeight),
+                                ),
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
+                          ],
+                        );
+                      },
                     ),
                   ),
                 ),
@@ -219,7 +255,9 @@ class _QuizScreenState extends State<QuizScreen>
 
     if (_answered) {
       if (isSelected) {
-        buttonColor = isCorrect ? AppColors.correctGreen : AppColors.incorrectRed;
+        buttonColor = isCorrect
+            ? AppColors.correctGreen
+            : AppColors.incorrectRed;
         foregroundColor = Colors.white;
       } else if (isCorrect) {
         buttonColor = AppColors.correctGreen;
@@ -234,21 +272,22 @@ class _QuizScreenState extends State<QuizScreen>
 
     return ElevatedButton(
       onPressed: _answered ? null : () => _handleAnswer(answer),
-      style: ElevatedButton.styleFrom(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-        ),
-        padding: const EdgeInsets.all(16),
-        elevation: _answered ? 0 : 8,
-        shadowColor: Colors.black.withAlpha((0.5 * 255).round()),
-      ).copyWith(
-        backgroundColor: WidgetStateProperty.all(buttonColor),
-        foregroundColor: WidgetStateProperty.all(foregroundColor),
-      ),
+      style:
+          ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+            padding: const EdgeInsets.all(16),
+            elevation: _answered ? 0 : 8,
+            shadowColor: Colors.black.withAlpha((0.5 * 255).round()),
+          ).copyWith(
+            backgroundColor: WidgetStateProperty.all(buttonColor),
+            foregroundColor: WidgetStateProperty.all(foregroundColor),
+          ),
       child: Text(
         answer,
         style: GoogleFonts.robotoMono(
-          fontSize: 18,
+          fontSize: 36,
           fontWeight: FontWeight.w600,
         ),
         textAlign: TextAlign.center,
